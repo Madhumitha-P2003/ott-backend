@@ -12,8 +12,8 @@ import java.util.Date;
 public class JwtUtil {
 
     // 🔒 FIXED SECRET (MUST NEVER CHANGE)
-    private static final String SECRET =
-            "ott-platform-super-secret-key-12345678901234567890";
+    private static final String SECRET = System.getenv("ott-platform-super-secret-key-12345678901234567890");
+
 
     private static final Key KEY =
             Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
