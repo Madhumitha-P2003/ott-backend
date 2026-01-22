@@ -11,9 +11,9 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    // 🔒 FIXED SECRET (MUST NEVER CHANGE)
-    private static final String SECRET = System.getenv("ott-platform-super-secret-key-12345678901234567890");
-
+    // ✅ ENV VARIABLE NAME (NOT THE VALUE)
+    private static final String SECRET =
+            System.getenv("JWT_SECRET");
 
     private static final Key KEY =
             Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
@@ -21,19 +21,15 @@ public class JwtUtil {
     private static final long EXPIRATION_TIME =
             1000 * 60 * 60 * 24; // 24 hours
 
-    // ✅ Generate Token
     public static String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(
-                        new Date(System.currentTimeMillis() + EXPIRATION_TIME)
-                )
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // ✅ Validate Token
     public static boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -46,7 +42,6 @@ public class JwtUtil {
         }
     }
 
-    // ✅ Extract Email
     public static String extractEmail(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(KEY)
