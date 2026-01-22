@@ -15,7 +15,6 @@ import com.ott.backend.security.JwtUtil;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     @Autowired
@@ -26,7 +25,7 @@ public class AuthController {
 
     /* ================= REGISTER ================= */
     @PostMapping("/register")
-    public User register(@RequestBody RegisterRequest request) {
+    public Map<String, Object> register(@RequestBody RegisterRequest request) {
 
         userRepository.findByEmail(request.getEmail())
                 .ifPresent(u -> {
@@ -36,11 +35,16 @@ public class AuthController {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-
-        // 🔐 ENCODE PASSWORD BEFORE SAVING
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", savedUser.getId());
+        response.put("name", savedUser.getName());
+        response.put("email", savedUser.getEmail());
+
+        return response;
     }
 
     /* ================= LOGIN (JWT) ================= */
@@ -50,17 +54,19 @@ public class AuthController {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        // 🔐 MATCH ENCODED PASSWORD
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
         }
 
-        // 🔐 GENERATE JWT
         String token = JwtUtil.generateToken(user.getEmail());
 
-        // 🔁 RESPONSE FORMAT
+        Map<String, Object> userResponse = new HashMap<>();
+        userResponse.put("id", user.getId());
+        userResponse.put("name", user.getName());
+        userResponse.put("email", user.getEmail());
+
         Map<String, Object> response = new HashMap<>();
-        response.put("user", user);
+        response.put("user", userResponse);
         response.put("token", token);
 
         return response;
