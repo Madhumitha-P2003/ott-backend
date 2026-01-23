@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ott.backend.dto.LoginRequest;
 import com.ott.backend.dto.RegisterRequest;
+import com.ott.backend.entity.SubscriptionPlan;
 import com.ott.backend.entity.User;
 import com.ott.backend.repository.UserRepository;
 import com.ott.backend.security.JwtUtil;
@@ -37,12 +38,16 @@ public class AuthController {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
+        // ✅ DEFAULT PLAN
+        user.setPlan(SubscriptionPlan.FREE);
+
         User savedUser = userRepository.save(user);
 
         Map<String, Object> response = new HashMap<>();
         response.put("id", savedUser.getId());
         response.put("name", savedUser.getName());
         response.put("email", savedUser.getEmail());
+        response.put("plan", savedUser.getPlan());
 
         return response;
     }
@@ -64,6 +69,7 @@ public class AuthController {
         userResponse.put("id", user.getId());
         userResponse.put("name", user.getName());
         userResponse.put("email", user.getEmail());
+        userResponse.put("plan", user.getPlan());
 
         Map<String, Object> response = new HashMap<>();
         response.put("user", userResponse);

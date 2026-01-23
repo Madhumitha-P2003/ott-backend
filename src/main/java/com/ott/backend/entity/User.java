@@ -23,6 +23,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // ✅ Subscription Plan (FREE / PREMIUM)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SubscriptionPlan plan;
+
     // ✅ Automatically set when row is created
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -46,6 +51,10 @@ public class User {
         return password;
     }
 
+    public SubscriptionPlan getPlan() {
+        return plan;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -62,5 +71,9 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setPlan(SubscriptionPlan plan) {
+        this.plan = plan;
     }
 }
