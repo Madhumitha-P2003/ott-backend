@@ -25,8 +25,9 @@ public class User {
 
     // ✅ Subscription Plan (FREE / PREMIUM)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private SubscriptionPlan plan;
+
 
     // ✅ Automatically set when row is created
     @CreationTimestamp
@@ -76,4 +77,11 @@ public class User {
     public void setPlan(SubscriptionPlan plan) {
         this.plan = plan;
     }
+    @PrePersist
+    public void prePersist() {
+        if (this.plan == null) {
+            this.plan = SubscriptionPlan.FREE;
+        }
+    }
+
 }
