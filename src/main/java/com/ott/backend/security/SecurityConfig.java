@@ -14,11 +14,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            // ✅ ENABLE CORS
-            .cors(cors -> {})
-            // ❌ DISABLE CSRF (API based auth)
+            .cors(cors -> {}) // ✅ ENABLE CORS IN SECURITY
             .csrf(csrf -> csrf.disable())
-            // ✅ ALLOW ALL REQUESTS (JWT handled manually)
             .authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll()
             );
@@ -26,7 +23,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 🔐 PASSWORD ENCODER
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

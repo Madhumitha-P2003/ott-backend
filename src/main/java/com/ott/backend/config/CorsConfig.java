@@ -11,14 +11,12 @@ public class CorsConfig {
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
-
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                                "http://localhost:5173",
-                                "https://ott-frontend-kk5rwf0va-madhumitha-perumals-projects.vercel.app",
-                                "https://ott-frontend-fawn.vercel.app"
+                            "http://localhost:5173",
+                            "https://ott-frontend-31jxd8wdw-madhumitha-perumals-projects.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
